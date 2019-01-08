@@ -36,27 +36,9 @@ include boards/$(BOARD)/Makefile.board
 # If they don't define a vendor ROM file
 ROM ?= boards/$(BOARD)/$(BOARD).rom
 
-# Check go version. We need go 1.11 or newer
-GOVERSION:=$(shell go version | grep ^go | cut -d ' ' -f 3 | cut -c 3-)
-GOMAJOR:=$(shell echo $(GOVERSION) | cut -d '.' -f 1)
-GOMINOR:=$(shell echo $(GOVERSION) | cut -d '.' -f 2)
-GOVERSIONREQ:=1.11
-GOMAJORREQ:=1
-GOMINORREQ:=11
-
-$(shell \
-	if [ "$(GOMAJOR)" -lt "$(GOMAJORREQ)" ]; then \
-		echo >&2 "Go version $(GOVERSION) too old, please install go $(GOVERSIONREQ) or newer"; \
-		exit 1; \
-	elif [ "$(GOMAJOR)" -eq "$(GOMAJORREQ)" ]; then \
-		if [ "$(GOMINOR)" -lt "$(GOMINORREQ)" ]; then \
-			echo >&2 "Go version $(GOVERSION) too old, please install go $(GOVERSIONREQ) or newer"; \
-			exit 1; \
-		fi; \
-	fi; \
-)
-
-
+ifdef USE_UTK
+include Makefile.utk
+endif
 
 linuxboot: $(BUILD)/linuxboot.rom
 
@@ -86,10 +68,6 @@ edk2.force: edk2/.git
 # and build the various Dxe/Smm files
 edk2/.git:
 	git clone --depth 1 --branch UDK2018 https://github.com/linuxboot/edk2
-
-bin/utk:
-	go get github.com/linuxboot/fiano/cmds/utk
-	cp $(GOPATH)/bin/utk $@
 
 $(BUILD)/Linux.ffs: $(KERNEL)
 $(BUILD)/Initrd.ffs: $(INITRD)
@@ -168,8 +146,9 @@ $(dxe-files): $(BUILD)/$(BOARD).txt
 dxe/%.ffs:
 	$(MAKE) -C dxe $(notdir $@)
 
-#$(BUILD)/linuxboot.rom: $(FVS)
-
+ifndef USE_UTK
+$(BUILD)/linuxboot.rom: $(FVS)
+else
 $(BUILD)/linuxboot.rom: bin/utk ./dxe/linuxboot.ffs $(BUILD)/Linux.ffs $(BUILD)/Initrd.ffs
 	$< \
 		$(ROM) \
@@ -178,6 +157,7 @@ $(BUILD)/linuxboot.rom: bin/utk ./dxe/linuxboot.ffs $(BUILD)/Linux.ffs $(BUILD)/
 		insert_dxe $(BUILD)/Linux.ffs \
 		insert_dxe $(BUILD)/Initrd.ffs \
 		save $@
+endif
 
 clean:
 	$(RM) $(BUILD)/{*.ffs,*.rom,*.vol,*.tmp}
