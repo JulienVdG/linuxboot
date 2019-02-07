@@ -95,3 +95,5 @@ $(BUILD)/rom/0x00010000.bin: $(BUILD)/$(BOARD).txt
 
 $(BUILD)/0x00010000-cut.bin: $(BUILD)/rom/0x00010000.bin
 	dd if=$< of=$@ bs=4096 count=784
+
+UTK_EXTRA_OPS := nvram-compact
