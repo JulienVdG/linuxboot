@@ -64,3 +64,4 @@ $(BUILD)/nvram1.ffs: $(NVRAM1_FFS)
 $(BUILD)/nvram2.ffs: $(NVRAM2_FFS)
 	./bin/nvram-compact < $< > $@
 
+UTK_EXTRA_OPS := nvram-compact
