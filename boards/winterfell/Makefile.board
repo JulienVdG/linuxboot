@@ -90,10 +90,16 @@ $(BUILD)/nvram1.ffs: $(NVRAM1_FFS)
 $(BUILD)/nvram2.ffs: $(NVRAM2_FFS)
 	./bin/nvram-compact < $< > $@
 
+#
+# UTK Compact the NVRAM region
+#
+
+nvram-nvar-keep := boards/$(BOARD)/nvar-keep.txt
+
+UTK_EXTRA_OPS := invalidate_nvar_except $(nvram-nvar-keep) nvram-compact
+
 # Make sure the firmware is extracted before
 $(BUILD)/rom/0x00010000.bin: $(BUILD)/$(BOARD).txt
 
 $(BUILD)/0x00010000-cut.bin: $(BUILD)/rom/0x00010000.bin
 	dd if=$< of=$@ bs=4096 count=784
-
-UTK_EXTRA_OPS := nvram-compact
