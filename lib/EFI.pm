@@ -520,6 +520,7 @@ sub fv_pad
 	my $size = length($$fv_ref);
 
 	# check for the overflow: if the header size is smaller than the actual size
+	warn sprintf "FV size in header 0x%x actual 0x%x\n", $fv_size, $size if $fv_size < $size;
 	return if $fv_size < $size;
 
 	# pad out so that actual size is the same as header size
