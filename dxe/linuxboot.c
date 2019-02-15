@@ -10,11 +10,11 @@
  * systems.
  *
  */
-// #define VOLUME_ADDRESS 0xFF840000 // Winterfell
-// #define VOLUME_LENGTH  0x20000
+#define VOLUME_ADDRESS 0xFF840000 // Winterfell
+#define VOLUME_LENGTH  0x20000
 
-#define VOLUME_ADDRESS	0xFF500000
-#define VOLUME_LENGTH	0x00400000
+// #define VOLUME_ADDRESS	0xFF500000
+// #define VOLUME_LENGTH	0x00400000
 
 #include "serial.h"
 #include <efi/efi.h>
