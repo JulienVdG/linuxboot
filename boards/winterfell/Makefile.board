@@ -19,6 +19,7 @@ dxe-files := $(shell awk  \
 	boards/$(BOARD)/image-files.txt \
 )
 
+user-size	:= 0x20000
 
 # The Intel firmware has lots of small pieces.
 # We replace the DXE recovery image and one of the other
@@ -29,10 +30,11 @@ $(BUILD)/rom/0x00000000.ifd \
 $(BUILD)/rom/0x00010000.bin \
 $(BUILD)/nvram1.vol \
 $(BUILD)/nvram2.vol \
-$(BUILD)/rom/0x00840000.bin \
+$(BUILD)/user.vol \
 $(BUILD)/dxe.vol \
 $(BUILD)/rom/0x00f00000.fv \
 
+#$(BUILD)/rom/0x00840000.bin \
 
 # Replace the DxeCore and SmmCore with our own
 # and add in the Linux kernel / initrd
@@ -45,6 +47,22 @@ $(BUILD)/dxe.vol: \
 	$(dxe-files) \
 	$(DXE_FFS) \
 
+#
+ifdef INITRD_SPLIT
+realinitrd := $(INITRD).1
+partinitrd := $(INITRD).2
+
+$(realinitrd): $(INITRD)
+	dd if=$^ of=$@ bs=1 count=$(INITRD_SPLIT)
+
+$(partinitrd): $(INITRD)
+	dd if=$^ of=$@ bs=1 skip=$(INITRD_SPLIT)
+
+$(BUILD)/Initrdpart.ffs: $(partinitrd)
+
+$(BUILD)/user.vol: $(BUILD)/Initrdpart.ffs
+
+endif
 #
 # Compact the NVRAM region.  this isn't required, but makes for cleaner images.
 #
