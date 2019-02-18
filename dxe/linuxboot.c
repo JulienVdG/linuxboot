@@ -262,7 +262,7 @@ linuxboot_start()
 		serial_string("LinuxBoot: unable to load bzImage image\r\n");
 		return -1;
 	}
-
+	
 	EFI_GUID loaded_image_guid = LOADED_IMAGE_PROTOCOL;
 	EFI_LOADED_IMAGE_PROTOCOL * loaded_image = NULL;
 	status = gBS->HandleProtocol(
