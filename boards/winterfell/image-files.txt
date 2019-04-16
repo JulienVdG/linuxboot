@@ -52,3 +52,80 @@ d0632c90-afd7-4492-b186-257c63143c61 SmmBase
 # b13edd38-684c-41ed-a305-d7b7e32497df SMBios64
 # ded7956d-7e20-4f20-91a1-190439b04d5b SmbiosGetFlashData64
 # daf4bf89-ce71-4917-b522-c89d32fbc59f SmbiosStaticData -- tiano compresed SMBIOS data
+
+# trials
+# revert fb78c8d87e54bfce133cf76391939533e0c1cbb8
+71ed12d1-250b-42fb-8c17-10dcfa771701 LegacyInterrupt
+# revert a497e6d77c3bacb734dbd3d90e29804c5d09cb4c
+9221315b-30bb-46b5-813e-1b1bf4712bd3 Default NVRAM
+ed32f7e0-5f9a-499d-bdba-b1eb58d5b0eb SBIDE
+622b0ffe-69b9-4554-8eef-339a549aaf6a DynamicPciBaseDxe
+996aa1e0-1e8c-4f36-b519-a170a206fc14 empty pad?
+e2a74738-8934-48f5-8412-99e948c8dc1b SmbiosDMIEdit
+fb142b99-df57-46cb-bc69-0bf858a734f9 PciSerial
+f1274f10-0d43-11e0-81e0-0800200c9a66 PciOutOfResourceSetupPage
+c56d9fcd-4c09-4186-8114-329013f90fd8 OnboardDevice
+cd84562c-6864-40a3-a081-c8d35e82b920 CspLibDxe
+1cd3eb4b-3434-4837-9ccb-2f6093fe3499 RuntimeMemoryHole
+# revert 6717ed6fbec7c7918b3277ce1684c3427699cded (plus CMOS and NVRAM ^)
+7b8db049-c7c7-4d3b-809f-926dee47cca2 SBSMI
+# revert c3e09cd20a87ea3129e8f2add2b6fc9572bb4d49
+70e1a818-0be1-4449-bfd4-9ef68c7f02a8 ReFlash
+6298fe18-d5ef-42b7-bb0c-2953283f5704 SleepSmi
+55e76644-78a5-4a82-a900-7126a5798892 HECIDXE
+ee07e0f6-0f6f-4437-a133-648272baf56c MeCore
+57e56594-ce95-46ad-9531-3c49310ca7ce OFBD
+a08276ec-a0fe-4e06-8670-385336c7d093 x86Thunk
+bc327dbd-b982-4f55-9f79-056ad7e987c5 SMIFlash
+bfe205c9-5b17-4f8f-9375-89614af8e199 OEMDXE
+c8743f2c-bfbf-425c-b443-f9a388080026 OEMBDXE
+c76579de-ca13-46d1-b92a-3f5a9f2a7a93 OEMBSMI
+# revert e204b33b72b73602a3c18091e4d288293162843b
+85fb8d3d-61a4-4518-9acf-76fcae169568 ScuDriver
+43a0a7b3-1e92-42ef-a46d-ddc03e52cb5c SataDriver
+116242c9-0c85-4ab9-bc34-454547b9f45d SbPchSmi
+59af16b0-661d-4865-a381-38de68385d8d OpalSecurity
+3580a829-3572-416e-bd8c-55877a16ed51 HeciSmm
+8e262d48-6181-493c-83b1-36e0dae0acab DcmiSmm
+b89b4673-23ae-4b80-89bd-151bb80bec73 RtErrorLog
+952821aa-eacd-465b-b478-5429dfc9a747 SlpSupport
+9ba52737-7d71-4306-8b8e-60c90426e66a GenericElog
+6c1962b6-921e-420b-acff-d7aea03a08d0 SmbiosElog
+ee5f9c39-e782-487b-89af-0dd4068bd4bf DataHubErrorCollector
+df4a6a65-3283-4ba5-90d7-eb08d0695c56 EventLogsSetupPage
+b1aed58a-c460-4887-93d7-5895041a075d SmbiosElogSetupScreen
+af987bd6-1fa3-4ea6-8d27-b9f6775ad783 DxeDcmi
+3e2282a2-8be1-42e7-8d8f-b20195d8d85f DcmiDxeFrb
+f43c4e50-6f3f-465e-8089-68e3568f011d DcmiSelStatusCode
+35240391-dc1b-45b4-85b2-c23b7b9d7a33 SOLConfig
+bc0b9fb8-97cf-4b17-9a9e-f574e62cbcc4 DcmiLanConfig
+486c8efd-4f50-4874-9e05-f9d6c2e7cbbe DcmiFru
+580dd900-385d-11d7-883a-00500473d4eb UHCD
+4a3602bc-1a05-4c82-99b4-588cd2a32cd5 LEGACYSREDIR
+24a0a602-3f7c-42aa-ae6e-25a93011a8c0 DcScreen
+09538704-8aa7-4d77-b9c7-cf620b07eda2 MiniSasHpDxe
+#revert 7ca33cf5f9bed3ed21fd2a138b3c0f8bbb3ac66e
+17088572-377f-44ef-8f4e-b09fff46a070 Microcode
+1d167657-04fe-42e5-9747-141b5a765875 TseBehavior
+93022f8c-1f09-47ef-bbb2-5814ff609df5 FileSystem
+dac2b117-b5fb-4964-a312-0dcc77061b9b Font
+f3331de6-4a55-44e4-b767-7453f7a1a021 MicrocodeUpdate
+7ccd5c07-8b3a-4be7-9d12-56b47cbfbccb SBAHCI
+8f5a2e02-538c-4d59-b920-c4786acbc552 AHCI
+67820532-7613-4dd3-9ed7-3d9be3a7da63 AINT13
+bc3245bd-b982-4f55-9f79-056ad7e987c5 AhciSmm
+a062cf1f-8473-4aa3-8793-600bc4ffe9a8 CSMCORE
+25acf158-dd61-4e64-9a49-55851e9a26c7 BIOSBLKIO
+29cf55f8-b675-4f5d-8f2f-b87a3ecfd063 CsmVideo
+0167ccc4-d0f7-4f21-a3ef-9e64b7cdce8b ScsiBus
+0a66e322-3740-4cce-ad62-bd172cecca35 ScsiDisk
+a59a0056-3341-44b5-9c9c-6d76f7673817 SignON
+63819805-67bb-46ef-aa8d-1524a19a01e4 ???
+c57ad6b7-0515-40a8-9d21-551652854e37 Shellx64
+04eaaaa1-29a1-11d7-8838-00500473d4eb USBRT
+4c006cd9-19ba-4617-8483-609194a1acfc USBINT13
+7a08cb98-e9bc-41c3-be19-b302f3f1f595 Terminal
+2187af13-8880-4f76-8f9f-2a91079c9daa WHEA
+899407d7-99fe-43d8-9a21-79ec328cac21 Setup
+7bb28b99-61bb-11d5-9a5d-0090273fc14d Logo file
+
