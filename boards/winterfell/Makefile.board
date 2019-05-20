@@ -19,7 +19,7 @@ dxe-files := $(shell awk  \
 	boards/$(BOARD)/image-files.txt \
 )
 
-user-size	:= 0x20000
+user-size	:= 0x4E0000
 
 # The Intel firmware has lots of small pieces.
 # We replace the DXE recovery image and one of the other
@@ -27,10 +27,11 @@ user-size	:= 0x20000
 # can clean up more space.
 FVS := \
 $(BUILD)/rom/0x00000000.ifd \
-$(BUILD)/rom/0x00010000.bin \
+$(BUILD)/0x00010000-cut.bin \
+$(BUILD)/user.vol \
 $(BUILD)/nvram1.vol \
 $(BUILD)/nvram2.vol \
-$(BUILD)/user.vol \
+$(BUILD)/rom/0x00840000.bin \
 $(BUILD)/dxe.vol \
 $(BUILD)/rom/0x00f00000.fv \
 
@@ -82,3 +83,8 @@ $(BUILD)/nvram1.ffs: $(NVRAM1_FFS)
 $(BUILD)/nvram2.ffs: $(NVRAM2_FFS)
 	./bin/nvram-compact < $< > $@
 
+# Make sure the firmware is extracted before
+$(BUILD)/rom/0x00010000.bin: $(BUILD)/$(BOARD).txt
+
+$(BUILD)/0x00010000-cut.bin: $(BUILD)/rom/0x00010000.bin
+	dd if=$< of=$@ bs=4096 count=784
