@@ -163,7 +163,15 @@ append_read_ffs(
 		return -1;
 	}
 
+	serial_string("LinuxBoot: new buffer=");
+	serial_hex((unsigned long) newbuffer, 16);
+
+	serial_string("LinuxBoot: Copy");
 	gBS->CopyMem(newbuffer, *buffer, *size);
+	serial_string("LinuxBoot: buffer[0]=");
+	serial_hex(*((unsigned long*) *buffer), 16);
+	serial_string("LinuxBoot: new buffer[0]=");
+	serial_hex(*((unsigned long*) newbuffer), 16);
 
 	status = gBS->FreePool(*buffer);
 	if (status != 0)
@@ -176,6 +184,11 @@ append_read_ffs(
 	*buffer = newbuffer;
 	newbuffer = *buffer + *size;
 
+	serial_string("LinuxBoot: new buffer=");
+	serial_hex((unsigned long) newbuffer, 16);
+
+	serial_string("LinuxBoot: new buffer[0]=");
+	serial_hex(*((unsigned long*) newbuffer), 16);
 	status = fv->ReadSection(
 		fv,
 		guid,
@@ -192,6 +205,9 @@ append_read_ffs(
 		return -1;
 	}
 	*size += newsize;
+
+	serial_string("LinuxBoot: new buffer[0]=");
+	serial_hex(*((unsigned long*) newbuffer), 16);
 
 	serial_string("LinuxBoot: append FFS buffer=");
 	serial_hex((unsigned long) *buffer, 16);
