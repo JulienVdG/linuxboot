@@ -1,0 +1,89 @@
+#
+# Specific targets and things for the OCP Leopard-V2 Quanta
+#
+# This is responsible for extracting the DXE section from the ROM,
+# extracting each of the images from it, and setting the sizes for
+# the different firmware images.
+#
+
+# 4 MB DXE ROM, compressed from 15 MB
+dxe-compress	:= 0xF00000
+dxe-size	:= 0x45F000
+
+
+dxe-path := $(BUILD)/rom/0x00910000
+
+dxe-files := $(shell awk  \
+	'/^[0-9A-Fa-f]/ {print "$(dxe-path)/"$$1".ffs"}' \
+	boards/$(BOARD)/image-files.txt \
+)
+
+extra-size	:= 0x558000
+
+# extra-size - size(Linux.ffs) - 0xBE (need size for header / alignment padding) decimal for dd
+INITRD_SPLIT	:= 2653896
+
+# The Intel firmware has lots of small pieces.
+# We replace the DXE recovery image and one of the other
+# images with the LinuxBoot one.  Potentially we
+# can clean up more space.
+FVS := \
+$(BUILD)/rom/0x00000000.ifd \
+$(BUILD)/0x00010000-cut.bin \
+$(BUILD)/extra.vol \
+$(BUILD)/rom/0x00800000.fv \
+$(BUILD)/rom/0x00880000.bin \
+$(BUILD)/dxe.vol \
+$(BUILD)/rom/0x00d6f000.bin \
+$(BUILD)/rom/0x00da0000.fv \
+
+
+DXE_FFS := \
+	$(BUILD)/dxe/linuxboot.ffs \
+
+$(BUILD)/dxe.vol: \
+	$(DXE_FFS) \
+	$(dxe-files) \
+
+EXTRA_FFS := \
+	$(BUILD)/Linux.ffs \
+	$(BUILD)/Initrd.ffs \
+
+$(BUILD)/extra.vol: $(EXTRA_FFS)
+
+# To Replace the DxeCore and SmmCore with our own place those in DXE_FFS
+# and comment them in image-files.txt
+# -> this adds traces but does not seam to be able to load drivers :(
+donotuse := \
+	$(BUILD)/DxeCore.ffs \
+	$(BUILD)/PiSmmCore.ffs \
+
+#
+ifdef INITRD_SPLIT
+realinitrd := $(INITRD).1
+partinitrd := $(INITRD).2
+
+$(realinitrd): $(INITRD)
+	dd if=$^ of=$@ bs=1 count=$(INITRD_SPLIT)
+
+$(partinitrd): $(INITRD)
+	dd if=$^ of=$@ bs=1 skip=$(INITRD_SPLIT)
+
+$(BUILD)/Initrdpart.ffs: $(partinitrd)
+
+#$(BUILD)/dxe.vol: $(BUILD)/Initrdpart.ffs
+DXE_FFS += \
+	$(BUILD)/Initrdpart.ffs
+endif
+
+# Make sure the firmware is extracted before
+$(BUILD)/rom/0x00010000.bin: $(BUILD)/$(BOARD).txt
+
+$(BUILD)/0x00010000-cut.bin: $(BUILD)/rom/0x00010000.bin
+	dd if=$< of=$@ bs=4096 count=664
+
+EXTRA_FV_GUID := e10864aa-9088-512e-970f-0a454d0aeb6a
+
+UTK_EXTRA_DEPS := $(EXTRA_FFS)
+UTK_EXTRA_OPS := tighten_me create-fv 0x2a8000 $(extra-size) $(EXTRA_FV_GUID) \
+		 $(foreach ffs,$(EXTRA_FFS), insert_end $(EXTRA_FV_GUID) $(ffs))
