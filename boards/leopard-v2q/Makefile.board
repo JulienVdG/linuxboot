@@ -21,7 +21,7 @@ dxe-files := $(shell awk  \
 extra-size	:= 0x558000
 
 # extra-size - size(Linux.ffs) - 0xBE (need size for header / alignment padding) decimal for dd
-INITRD_SPLIT	:= 2653896
+INITRD_SPLIT	:= 2641608
 
 # The Intel firmware has lots of small pieces.
 # We replace the DXE recovery image and one of the other
