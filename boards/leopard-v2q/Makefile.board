@@ -20,8 +20,10 @@ dxe-files := $(shell awk  \
 
 extra-size	:= 0x558000
 
+LINUXFFS_SIZE = $(shell stat -L -c %s build/leopard-v2q/Linux.ffs)
 # extra-size - size(Linux.ffs) - 0xBE (need size for header / alignment padding) decimal for dd
-INITRD_SPLIT	:= 2641608
+INITRD_SPLIT	= $(shell echo $$(( ($(extra-size) - 0xB7 - $$(stat -L -c %s $(BUILD)/Linux.ffs)) / 8 * 8 )) )
+
 
 # The Intel firmware has lots of small pieces.
 # We replace the DXE recovery image and one of the other
@@ -63,11 +65,11 @@ ifdef INITRD_SPLIT
 realinitrd := $(INITRD).1
 partinitrd := $(INITRD).2
 
-$(realinitrd): $(INITRD)
-	dd if=$^ of=$@ bs=1 count=$(INITRD_SPLIT)
+$(realinitrd): $(INITRD) $(BUILD)/Linux.ffs
+	dd if=$< of=$@ bs=1 count=$(INITRD_SPLIT)
 
-$(partinitrd): $(INITRD)
-	dd if=$^ of=$@ bs=1 skip=$(INITRD_SPLIT)
+$(partinitrd): $(INITRD) $(BUILD)/Linux.ffs
+	dd if=$< of=$@ bs=1 skip=$(INITRD_SPLIT)
 
 $(BUILD)/Initrdpart.ffs: $(partinitrd)
 
