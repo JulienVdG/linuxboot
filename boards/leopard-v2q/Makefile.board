@@ -24,6 +24,9 @@ LINUXFFS_SIZE = $(shell stat -L -c %s build/leopard-v2q/Linux.ffs)
 # extra-size - size(Linux.ffs) - 0xBE (need size for header / alignment padding) decimal for dd
 INITRD_SPLIT	= $(shell echo $$(( ($(extra-size) - 0xB7 - $$(stat -L -c %s $(BUILD)/Linux.ffs)) / 8 * 8 )) )
 
+# extract-firmware needs to decompress the LZMA compressed DXE modules
+# and repack them so that the executables are not compressed.
+CONFIG_REPACK	:= y
 
 # The Intel firmware has lots of small pieces.
 # We replace the DXE recovery image and one of the other
@@ -41,24 +44,9 @@ $(BUILD)/rom/0x00da0000.fv \
 
 
 DXE_FFS := \
-	$(BUILD)/dxe/linuxboot.ffs \
-
-$(BUILD)/dxe.vol: \
-	$(DXE_FFS) \
-	$(dxe-files) \
-
-EXTRA_FFS := \
-	$(BUILD)/Linux.ffs \
-	$(BUILD)/Initrd.ffs \
-
-$(BUILD)/extra.vol: $(EXTRA_FFS)
-
-# To Replace the DxeCore and SmmCore with our own place those in DXE_FFS
-# and comment them in image-files.txt
-# -> this adds traces but does not seam to be able to load drivers :(
-donotuse := \
-	$(BUILD)/DxeCore.ffs \
 	$(BUILD)/PiSmmCore.ffs \
+	$(BUILD)/dxe/linuxboot.ffs \
+	$(BUILD)/DxeCore.ffs \
 
 #
 ifdef INITRD_SPLIT
@@ -73,10 +61,19 @@ $(partinitrd): $(INITRD) $(BUILD)/Linux.ffs
 
 $(BUILD)/Initrdpart.ffs: $(partinitrd)
 
-#$(BUILD)/dxe.vol: $(BUILD)/Initrdpart.ffs
 DXE_FFS += \
 	$(BUILD)/Initrdpart.ffs
 endif
+
+$(BUILD)/dxe.vol: \
+	$(DXE_FFS) \
+	$(dxe-files) \
+
+EXTRA_FFS := \
+	$(BUILD)/Linux.ffs \
+	$(BUILD)/Initrd.ffs \
+
+$(BUILD)/extra.vol: $(EXTRA_FFS)
 
 # Make sure the firmware is extracted before
 $(BUILD)/rom/0x00010000.bin: $(BUILD)/$(BOARD).txt
@@ -84,8 +81,10 @@ $(BUILD)/rom/0x00010000.bin: $(BUILD)/$(BOARD).txt
 $(BUILD)/0x00010000-cut.bin: $(BUILD)/rom/0x00010000.bin
 	dd if=$< of=$@ bs=4096 count=664
 
+DXE_FV_GUID := 5c60f367-a505-419a-859e-2a4ff6ca6fe5
+
 EXTRA_FV_GUID := e10864aa-9088-512e-970f-0a454d0aeb6a
 
 UTK_EXTRA_DEPS := $(EXTRA_FFS)
-UTK_EXTRA_OPS := tighten_me create-fv 0x2a8000 $(extra-size) $(EXTRA_FV_GUID) \
+UTK_EXTRA_OPS := repack $(DXE_FV_GUID) tighten_me create-fv 0x2a8000 $(extra-size) $(EXTRA_FV_GUID) \
 		 $(foreach ffs,$(EXTRA_FFS), insert_end $(EXTRA_FV_GUID) $(ffs))

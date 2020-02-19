@@ -1,6 +1,6 @@
 fc510ee7-ffdc-11d4-bd41-0080c73c8881 DXE Apriori
 ab7ed12e-1d78-4635-ab87-23f00a911ec7 RomLayoutDxe
-d6a2cb7f-6a18-4e2f-b43b-9920a733700a DxeCore #JVDG
+# d6a2cb7f-6a18-4e2f-b43b-9920a733700a DxeCore #JVDG
 9b680fce-ad6b-4f3a-b60b-f59899003443 DevicePathDxe
 13ac6dd0-73d0-11d4-b06b-00aa00bd6de7 EbcDxe
 348c4d62-bfbd-4882-9ece-c80bb1c4783b HiiDatabase
@@ -63,7 +63,7 @@ ba31025c-4aa8-4cae-98ca-ba12c6bc7d78 SmmControl2Dxe
 2fa2a6da-11d5-4dc3-999a-749648b03c56 PiSmmIpl
 # 8eef9ad2-463e-425f-a4fe-2f6783d6f97e GenericSio
 3c1de39f-d207-408a-aacc-731cfb7f1dd7 PciBus
-e94f54cd-81eb-47ed-aec3-856f5dc157a9 PiSmmCore #JVDG
+# e94f54cd-81eb-47ed-aec3-856f5dc157a9 PiSmmCore #JVDG
 0c375a90-4c4c-4428-8ea0-531be8959bf7 FlashDriverSmm
 447a1b58-8f3e-4658-abaa-9e7b2280b90a NVRAMSmm
 842a454a-75e5-408b-8b1c-36420e4e3f21 NvramSmi

@@ -166,11 +166,17 @@ $(BUILD)/dxe/volume_config.h: boards/$(BOARD)/volume_config.h
 ifndef USE_UTK
 $(BUILD)/linuxboot.rom: $(FVS)
 else
+ifndef DXE_FV_GUID
+insert_dxe_cmd = insert_dxe
+else
+insert_dxe_cmd = insert_front $(DXE_FV_GUID)
+endif
+
 $(BUILD)/linuxboot.rom: bin/utk $(DXE_FFS) $(UTK_EXTRA_DEPS)
 	$< \
 		$(ROM) \
 		remove_dxes_except boards/$(BOARD)/image-files.txt \
-		$(foreach ffs,$(DXE_FFS), insert_dxe $(ffs)) \
+		$(foreach ffs,$(DXE_FFS), $(insert_dxe_cmd) $(ffs)) \
 		$(UTK_EXTRA_OPS) \
 		save $@
 endif
