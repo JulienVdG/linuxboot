@@ -129,6 +129,7 @@ $(BUILD)/$(BOARD).txt: $(ROM)
 	( \
 	cd $(BUILD) ; \
 	$(pwd)/bin/extract-firmware \
+		$(if $(CONFIG_REPACK)==y,--repack) \
 		-o rom \
 	) < $^ \
 	> $@.tmp
